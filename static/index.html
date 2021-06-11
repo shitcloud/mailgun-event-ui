@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MailGun Log Explorer</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/styles/default.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-extensions@6.2.7/dist/css/bulma-extensions.min.css" integrity="sha256-RuPsE2zPsNWVhhvpOcFlMaZ1JrOYp2uxbFmOLBYtidc=" crossorigin="anonymous">
+</head>
+
+<body>
+  <div id="app">
+    <section class="section">
+      <div class="container is-fluid">
+        <div class="columns is-centered">
+          <div class="column is-half">
+            <div class="box">
+              <div class="field">
+                <label class="label">Type</label>
+                <input class="is-checkradio is-link" id="opened-checkbox" type="checkbox" checked="checked" v-model="showOpened">
+                <label for="opened-checkbox">opened</label>
+                <input class="is-checkradio is-success" id="delivered-checkbox" type="checkbox" checked="checked" v-model="showDelivered">
+                <label for="delivered-checkbox">delivered</label>
+                <input class="is-checkradio is-primary" id="accepted-checkbox" type="checkbox" checked="checked" v-model="showAccepted">
+                <label for="accepted-checkbox">accepted</label>
+                <input class="is-checkradio is-danger" id="failed-checkbox" type="checkbox" checked="checked" v-model="showFailed">
+                <label for="failed-checkbox">failed</label>
+              </div>
+              <div class="field">
+                <label class="label">Til</label>
+                <input type="text" class="input" v-model="filterRecipient">
+              </div>
+              <table class="table is-striped is-hoverable is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>Til</th>
+                    <th>Dato</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="event in filteredEvents" :key="event.id" class="is-clickable" @click="selected = event">
+                    <td>{{event.recipient}}</td>
+                    <td>{{event.timestamp}}</td>
+                    <td><span class="tag" :class="eventTag(event.event)">{{event.event}}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="buttons">
+                <button class="button is-link" @click="getEvents(pages.first)">&lt;&lt;</button>
+                <button class="button is-link" @click="getEvents(pages.previous)">&lt;</button>
+                <button class="button is-link" @click="getEvents(pages.next)">&gt;</button>
+                <button class="button is-link" @click="getEvents(pages.last)">&gt;&gt;</button>
+              </div>
+            </div>
+          </div>
+          <div class="column is-half">
+            <div class="box">
+              <pre v-html="highlight(JSON.stringify(selected, null, 4), 'JSON')" class="has-background-white"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bulma-extensions@6.2.7/dist/js/bulma-extensions.min.js" integrity="sha256-q4zsxO0fpPm6VhtL/9QkCFE5ZkNa0yeUxhmt1VO1ev0=" crossorigin="anonymous"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
